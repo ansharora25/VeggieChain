@@ -7,8 +7,8 @@ This project is built for students, beginners, and anyone who wants a hands-on, 
 Live App
 
 Play VeggieChain here:
-(Add your Streamlit deployment link once ready)
-https://veggiechain-yourusername.streamlit.app
+https://veggiechain-79rnm2tmqkmyuzpbpjb4pf.streamlit.app
+
 
 How the Game Works
 
