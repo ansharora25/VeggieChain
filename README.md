@@ -13,59 +13,37 @@ https://veggiechain-79rnm2tmqkmyuzpbpjb4pf.streamlit.app
 How the Game Works
 
 Each day, the player decides:
-
 Plant Area: How many units of crop to plant
-
 Ship Quantity: How much inventory to send to market
-
 Price per Unit: Price offered at the city market
-
 Market Demand: Expected demand for the day
 
 The simulation models:
-
 Harvest with a one-day planting delay
-
 Spoilage at both farm and market
-
 Shipping capacity limits
-
 Sales, revenue, costs, and daily profit
-
 Cumulative profit and inventory visualization
 
 The dashboard updates with:
-
 Metrics (cash, inventories, sales, profit)
-
 Turn-by-turn history table
-
 Line charts for inventory and profit trends
 
 Key Learning Concepts
-
 VeggieChain introduces core supply chain ideas:
-
 Production planning
-
 Transportation constraints
-
 Demand fulfillment
-
 Spoilage & perishability
-
 Price vs. demand interactions
-
 Profit optimization through trade-offs
-
-Perfect for SCM students, business clubs, and classroom demonstrations.
+Perfect for SCM students, business clubs, and classroom demonstrations
 
 Tech Stack
 
 Python
-
 Streamlit (Web UI)
-
 Pandas (Tabular data and charts)
 
 Dataclasses (Model structure)
