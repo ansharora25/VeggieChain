@@ -96,10 +96,10 @@ class VeggieChainModel:
         d = self.decisions
         prev = self.state
 
-        # 🌦️ Random weather for the day
+        # 🌦️ Random weather
         weather, multiplier = random.choice(list(WEATHER_EFFECTS.items()))
 
-        # Capacity & feasible shipment
+        # Capacity & shipment
         max_ship = p["truck_capacity"] * p["num_trucks"]
         feasible_ship = min(d.ship_qty, prev.inventory_farm, max_ship)
 
@@ -116,7 +116,7 @@ class VeggieChainModel:
         inventory_market_after_sales = inventory_market_raw - sales
         inventory_market = inventory_market_after_sales * (1.0 - p["spoilage_rate_market"])
 
-        # Profit & cash
+        # Financials
         revenue = sales * d.price
         cost_plant_turn = d.plant_area * p["cost_plant"]
         cost_ship_turn = feasible_ship * p["cost_ship"]
@@ -161,11 +161,10 @@ st.set_page_config(page_title="VeggieChain", page_icon="🥕", layout="wide")
 
 st.title("🥕 VeggieChain – Farm-to-Market Supply Chain Game")
 st.markdown(
-    "Run a vegetable supply chain by choosing how much to plant, ship, and price. "
-    "After Day 4, demand becomes unpredictable. Weather affects harvest every day."
+    "Manage a vegetable supply chain. After Day 4, demand becomes unpredictable. "
+    "Weather affects harvest every day."
 )
 
-# Initialize model
 if "game" not in st.session_state:
     st.session_state.game = VeggieChainModel()
 
@@ -178,13 +177,12 @@ with st.sidebar:
         game.init_game()
         st.success("Game reset!")
     st.markdown("---")
-    st.caption("🌦️ Weather is random each day.\n📈 Demand randomizes after Day 4.")
+    st.caption("🌦️ Weather is random daily\n📈 Demand randomizes after Day 4")
 
 col_left, col_right = st.columns([1, 2])
 
 with col_left:
     st.subheader("Decisions for Today")
-
     d = game.decisions
 
     plant_area = st.number_input("Plant Area", 0, 500, int(d.plant_area), step=10)
@@ -204,11 +202,10 @@ with col_left:
 
         game.set_decisions(plant_area, ship_qty, price, demand_market)
         game.advance_turn()
-        st.success("Advanced one day!")
+        st.success(f"Advanced one day! Demand used: {demand_market}")
 
 with col_right:
     st.subheader("Current Status")
-
     s = game.get_state()["state"]
 
     m1, m2, m3, m4 = st.columns(4)
@@ -223,23 +220,26 @@ with col_right:
     m7.metric("Total Profit", f"${s['profit_cum']:.2f}")
 
     st.markdown("### 🌦️ Weather Today")
-    st.info(f"{s['weather']}  (Harvest x{s['weather_multiplier']})")
+    st.info(f"{s['weather']} (Harvest ×{s['weather_multiplier']})")
 
     st.markdown("---")
-    st.subheader("History")
+    st.subheader("History & Trends")
 
     if game.history:
         import pandas as pd
+
         rows = []
         for h in game.history:
             r = {}
             r.update({f"state_{k}": v for k, v in h["state"].items()})
             r.update({f"dec_{k}": v for k, v in h["decisions"].items()})
             rows.append(r)
-        df = pd.DataFrame(rows)
 
-        st.line_chart(df.set_index("state_turn")[["state_profit_turn", "state_profit_cum"]])
-        st.line_chart(df.set_index("state_turn")[["state_inventory_farm", "state_inventory_market"]])
+        df = pd.DataFrame(rows).set_index("state_turn")
+
+        st.line_chart(df[["state_profit_turn", "state_profit_cum"]])
+        st.line_chart(df[["state_inventory_farm", "state_inventory_market"]])
+        st.line_chart(df[["dec_demand_market"]])
     else:
         st.info("No history yet. Advance the day to start.")
 
